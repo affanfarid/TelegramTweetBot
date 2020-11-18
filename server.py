@@ -14,6 +14,10 @@ update_id = None
 while True:
     print("...")
     updates = bot.get_updates(offset=update_id)
+    #error message
+    if updates["ok"] == False:
+        print('{}: {}'.format(updates["error_code"],updates["description"]))
+        break
     updates = updates["result"]
 
     if updates:
