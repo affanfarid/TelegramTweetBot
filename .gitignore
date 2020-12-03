@@ -1,7 +1,4 @@
-#Ignore mac system files
-.DS_Store
-
-#Ignore config file
 *.cfg
+.DS_Store
 
 
