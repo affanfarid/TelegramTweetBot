@@ -23,7 +23,7 @@ def lastUpdate(req):
 
 #function that sends message from bot to user
 def sendMessage(chat_id, message_text):
-    params = {"chat_id": chat_id, "message_text": message_text}
+    params = {"chat_id": chat_id, "text": message_text}
     response = requests.post(url+ "sendMessage", data=params)
     return response
 

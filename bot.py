@@ -24,4 +24,4 @@ class telegram_TweetBot():
     def read_token_from_config_file(self, config):
         parser = cfg.ConfigParser()
         parser.read(config)
-        return parser.get('creds', 'token')
+        return parser.get('creds', 'telegramToken')
