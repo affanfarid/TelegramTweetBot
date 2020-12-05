@@ -4,6 +4,7 @@ import configparser as cfg
 import tweepy
 from telegramBot import TelegramBot
 from twitterConnection import TwitterConnection
+from twitterStreamListener import TwitterStreamListener
 
 # config = "config.cfg"
 # parser = cfg.ConfigParser()
@@ -26,15 +27,23 @@ from twitterConnection import TwitterConnection
 
 connection = TwitterConnection("config.cfg")
 bot = TelegramBot("config.cfg")
+gID = "-419068391"
+
+
+# tweets = connection.api.user_timeline("ShamsCharania", count=1)
+# for tweet in tweets:
+#     tweetUrl = "https://twitter.com/{}/status/{}".format(tweet.user.screen_name, tweet.id)
+#     msg = "[@{}] {}: {} {}".format(tweet.user.screen_name, tweet.user.name, tweet.text, tweetUrl)
+
+#     bot.sendMessage("-419068391", msg)
 
 
 
-wojtweets = connection.api.user_timeline("wojespn", count=1)
-for tweet in wojtweets:
-    #msg = "[@{}] {}: {} {}".format(tweet.user.screen_name, tweet.user.name, tweet.text, tweet.entities.urls.url)
-    msg = "[@{}] {}: {} ".format(tweet.user.screen_name, tweet.user.name, tweet.text)
-    
-    #bot.sendMessage("-419068391", msg)
-    print(tweet.entities)
+###
+followList = ["wojespn","ShamsCharania","Lakers", "CNN","BleacherReport" ]
 
-#bot.sendMessage("-419068391", "send from telegramBot.py")
+myStreamListener = TwitterStreamListener(bot, gID)
+myStream = tweepy.Stream(auth = connection.api.auth, listener=TwitterStreamListener(bot,gID))
+#myStream.filter(track=['Lakers'])
+#myStream.filter(follow=followList )
+myStream.filter(follow=["@cnn","cnn"] )

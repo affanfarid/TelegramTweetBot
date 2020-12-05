@@ -23,11 +23,6 @@ class TelegramBot():
             response = requests.post(self.base+ "sendMessage", data=payload)
             return response
         
-    
-        #url = self.base + "sendMessage?chat_id={}&text={}".format(chat_id,msg)
-        #only if the message is not empty, ping the telegram api with the url
-        # if msg is not None:
-        #     requests.get(url)
 
     def read_token_from_config_file(self, config, tokenName):
         parser = cfg.ConfigParser()
