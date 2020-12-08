@@ -25,5 +25,6 @@ api = tweepy.API(auth)
 wojtweets = api.user_timeline("wojespn", count=1)
 for tweet in wojtweets:
     print(tweet.text)
+    print(tweet.user.id)
 
 #print(wojtweets)

@@ -41,9 +41,11 @@ gID = "-419068391"
 
 ###
 followList = ["wojespn","ShamsCharania","Lakers", "CNN","BleacherReport" ]
+# affan "1270236623486287873"
+# wojespn 50323173
 
 myStreamListener = TwitterStreamListener(bot, gID)
 myStream = tweepy.Stream(auth = connection.api.auth, listener=TwitterStreamListener(bot,gID))
 #myStream.filter(track=['Lakers'])
 #myStream.filter(follow=followList )
-myStream.filter(follow=["@cnn","cnn"] )
+myStream.filter(follow=["50323173"] )
