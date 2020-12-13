@@ -6,9 +6,9 @@ from telegramBot import TelegramBot
 from twitterConnection import TwitterConnection
 from twitterStreamListener import TwitterStreamListener
 
-# config = "config.cfg"
-# parser = cfg.ConfigParser()
-# parser.read(config)
+config = "config.cfg"
+parser = cfg.ConfigParser()
+parser.read(config)
 
 # telegramToken = parser.get('creds', 'telegramToken')
 
@@ -25,9 +25,10 @@ from twitterStreamListener import TwitterStreamListener
 # print(response)
 # print(response.url)
 
-connection = TwitterConnection("config.cfg")
-bot = TelegramBot("config.cfg")
-gID = "-419068391"
+
+# connection = TwitterConnection("config.cfg")
+# bot = TelegramBot("config.cfg")
+# gID = "-419068391"
 
 
 # tweets = connection.api.user_timeline("ShamsCharania", count=1)
@@ -40,12 +41,58 @@ gID = "-419068391"
 
 
 ###
-followList = ["wojespn","ShamsCharania","Lakers", "CNN","BleacherReport" ]
-# affan "1270236623486287873"
-# wojespn 50323173
+# followList = ["wojespn","ShamsCharania","Lakers", "CNN","BleacherReport" ]
+# # affan "1270236623486287873"
+# # wojespn 50323173
+# # cnn 759251
 
-myStreamListener = TwitterStreamListener(bot, gID)
-myStream = tweepy.Stream(auth = connection.api.auth, listener=TwitterStreamListener(bot,gID))
-#myStream.filter(track=['Lakers'])
-#myStream.filter(follow=followList )
-myStream.filter(follow=["50323173"] )
+# myStreamListener = TwitterStreamListener(bot, gID)
+# myStream = tweepy.Stream(auth = connection.api.auth, listener=TwitterStreamListener(bot,gID))
+# #myStream.filter(track=['Lakers'])
+# #myStream.filter(follow=followList )
+# myStream.filter(follow=["759251"] )
+
+#-------------------------
+
+stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed"
+rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
+consumer_key = parser.get('creds', "twitterAPIkey")
+consumer_secret = parser.get('creds', "twitterAPIsecret")
+
+def get_bearer_token():
+    response = requests.post(
+        "https://api.twitter.com/oauth2/token",
+        auth=(consumer_key, consumer_secret),
+        data={"grant_type": "client_credentials"}
+    )
+
+    if response.status_code is not 200:
+        print("cant get a bearer token. {} : {}".format(response.status_code, response.text) )
+
+    body = response.json()
+    return body['access_token']
+
+def create_rule():
+    payload = {
+        "add": [
+            {
+                "value": "covid OR covid 19 lang:en -is:retweet", "tag": "covid"
+            }
+        ]
+    }
+
+    response = requests.post(rules_url,
+                                headers={"Authorization": "Bearer {}".format(
+                                    get_bearer_token()
+                                )
+                                }, json=payload
+    )
+
+    if response.status_code == 201:
+        print("Response: {}".format(response.text))
+    else:
+        print("Cannot create rules. {} : {}".format(response.status_code, response.text))
+
+
+
+create_rule()

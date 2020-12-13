@@ -22,7 +22,7 @@ api = tweepy.API(auth)
 # for tweet in public_tweets:
 #     print(tweet.text)
 
-wojtweets = api.user_timeline("wojespn", count=1)
+wojtweets = api.user_timeline("cnn", count=1)
 for tweet in wojtweets:
     print(tweet.text)
     print(tweet.user.id)
