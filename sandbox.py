@@ -76,17 +76,15 @@ def create_rule():
     payload = {
         "add": [
             {
-                "value": "covid OR covid 19 lang:en -is:retweet", "tag": "covid"
+                "value": "context:123.1220701888179359745  lang:en -is:retweet", "tag": "covid"
             }
         ]
     }
 
-    response = requests.post(rules_url,
-                                headers={"Authorization": "Bearer {}".format(
-                                    get_bearer_token()
-                                )
-                                }, json=payload
-    )
+    response = requests.post("GET",rules_url,
+                            headers={"Authorization": "Bearer {}".format(
+                                    get_bearer_token()) }, json=payload)
+    
 
     if response.status_code == 201:
         print("Response: {}".format(response.text))
@@ -94,5 +92,5 @@ def create_rule():
         print("Cannot create rules. {} : {}".format(response.status_code, response.text))
 
 
-
+#print(get_bearer_token())
 create_rule()
