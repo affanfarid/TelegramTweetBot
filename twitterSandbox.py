@@ -2,6 +2,7 @@ import requests
 import os
 import json
 import configparser as cfg
+from telegramBot import TelegramBot
 
 # To set your enviornment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
@@ -13,6 +14,9 @@ parser.read(config)
 
 consumer_key = parser.get('creds', "twitterAPIkey")
 consumer_secret = parser.get('creds', "twitterAPIsecret")
+
+bot = TelegramBot("config.cfg")
+telegramGroupID = "-419068391"
 
 def get_bearer_token():
     response = requests.post(
@@ -71,7 +75,12 @@ def set_rules(headers, delete, bearer_token):
         # {"value": "dog has:images", "tag": "dog pictures"},
         # {"value": "cat has:images -grumpy", "tag": "cat pictures"},
         #{"value": "dog has:images", "tag": "dog pictures"},
-        {"value": "from:affanfarid3 -is:retweet"}
+        {"value": "from:wojespn -is:retweet -has:links"},
+        {"value": "from:TheSteinLine -is:retweet -has:links"},
+        {"value": "from:ShamsCharania -is:retweet -has:links"},
+        {"value": "from:ChrisBHaynes -is:retweet -has:links"},
+        {"value": "from:KCJHoop -is:retweet"},
+        {"value": "from:affanfarid3 -is:retweet -has:links"}
     ]
     payload = {"add": sample_rules}
     response = requests.post(
@@ -87,8 +96,11 @@ def set_rules(headers, delete, bearer_token):
 
 
 def get_stream(headers, set, bearer_token):
+    newUrl = "https://api.twitter.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at"
+    pastUrl = "https://api.twitter.com/2/tweets/search/stream"
+
     response = requests.get(
-        "https://api.twitter.com/2/tweets/search/stream", headers=headers, stream=True,
+        newUrl, headers=headers, stream=True,
     )
     print(response.status_code)
     if response.status_code != 200:
@@ -99,8 +111,40 @@ def get_stream(headers, set, bearer_token):
         )
     for response_line in response.iter_lines():
         if response_line:
+            #line = response_line.replace('\n', '')
+
             json_response = json.loads(response_line)
-            print(json.dumps(json_response, indent=4, sort_keys=True))
+            
+            tweet = json_response
+            # json_response = json_response.replace('\n', '')
+            # tweet = json.loads(json_response)
+            #tweet = json.loads(line)
+
+
+            # tweet = status
+            # tweetUrl = "https://twitter.com/{}/status/{}".format(tweet.user.screen_name, tweet.id)
+            # msg = "[@{}] {}: {} {}".format(tweet.user.screen_name, tweet.user.name, tweet.text, tweetUrl)
+
+            tweetText = tweet["data"]["text"]
+            tweetName = tweet["includes"]["users"][0]["name"]
+            tweetAt = tweet["includes"]["users"][0]["username"]
+            tweetID = tweet["data"]["id"]
+
+            tweetUrl = "https://twitter.com/{}/status/{}".format(tweetAt, tweetID)
+            msg = "[@{}] {}: {} {}".format(tweetAt, tweetName, tweetText, tweetUrl)
+
+
+            #msg = json.dumps(json_response, indent=4, sort_keys=True)
+
+            # print("NAME: {}".format(msg["includes"]["users"]["name"]))
+            # print("TEXT: {}".format(msg["data"]["text"]))
+
+            #msg = json.dumps(json_response, indent=4, sort_keys=True)
+            bot.sendMessage(telegramGroupID, msg)
+            
+            #print(json.dumps(json_response, indent=4, sort_keys=True))
+            print(json.dumps(tweet, indent=4, sort_keys=True))
+            print(msg)
 
 
 def main():
