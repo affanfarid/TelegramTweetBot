@@ -29,6 +29,3 @@ class TelegramBot():
         parser.read(config)
         return parser.get('creds', tokenName)
 
-
-# bot = TelegramBot("config.cfg")
-# bot.sendMessage("-419068391", "send from telegramBot.py")
