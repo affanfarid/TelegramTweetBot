@@ -3,7 +3,8 @@ from twitterStreamConnection import TwitterConnection
 
 
 bot = TelegramBot("config.cfg")
-gID = ["-419068391"]
+
+telegramGroupIDList = ["-419068391", "-1001082696712"]
 
 rules = [
         {"value": "from:wojespn -is:retweet -has:links"},
@@ -14,4 +15,4 @@ rules = [
         {"value": "from:affanfarid3 -is:retweet -has:links"}
     ]
 
-tc = TwitterConnection("config.cfg",bot, gID, rules)
+tc = TwitterConnection("config.cfg",bot, telegramGroupIDList, rules)
