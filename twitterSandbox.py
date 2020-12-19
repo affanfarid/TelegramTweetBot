@@ -97,7 +97,7 @@ def set_rules(headers, delete, bearer_token):
 
 def get_stream(headers, set, bearer_token):
     newUrl = "https://api.twitter.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at"
-    pastUrl = "https://api.twitter.com/2/tweets/search/stream"
+    #pastUrl = "https://api.twitter.com/2/tweets/search/stream"
 
     response = requests.get(
         newUrl, headers=headers, stream=True,

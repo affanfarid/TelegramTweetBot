@@ -5,10 +5,11 @@ import tweepy
 from telegramBot import TelegramBot
 from twitterConnection import TwitterConnection
 from twitterStreamListener import TwitterStreamListener
+from twitterStreamConnection import TwitterConnection
 
-config = "config.cfg"
-parser = cfg.ConfigParser()
-parser.read(config)
+# config = "config.cfg"
+# parser = cfg.ConfigParser()
+# parser.read(config)
 
 # telegramToken = parser.get('creds', 'telegramToken')
 
@@ -27,8 +28,8 @@ parser.read(config)
 
 
 # connection = TwitterConnection("config.cfg")
-# bot = TelegramBot("config.cfg")
-# gID = "-419068391"
+bot = TelegramBot("config.cfg")
+gID = "-419068391"
 
 
 # tweets = connection.api.user_timeline("ShamsCharania", count=1)
@@ -54,43 +55,57 @@ parser.read(config)
 
 #-------------------------
 
-stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed"
-rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
-consumer_key = parser.get('creds', "twitterAPIkey")
-consumer_secret = parser.get('creds', "twitterAPIsecret")
+# stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed"
+# rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
+# consumer_key = parser.get('creds', "twitterAPIkey")
+# consumer_secret = parser.get('creds', "twitterAPIsecret")
 
-def get_bearer_token():
-    response = requests.post(
-        "https://api.twitter.com/oauth2/token",
-        auth=(consumer_key, consumer_secret),
-        data={"grant_type": "client_credentials"}
-    )
+# def get_bearer_token():
+#     response = requests.post(
+#         "https://api.twitter.com/oauth2/token",
+#         auth=(consumer_key, consumer_secret),
+#         data={"grant_type": "client_credentials"}
+#     )
 
-    if response.status_code is not 200:
-        print("cant get a bearer token. {} : {}".format(response.status_code, response.text) )
+#     if response.status_code is not 200:
+#         print("cant get a bearer token. {} : {}".format(response.status_code, response.text) )
 
-    body = response.json()
-    return body['access_token']
+#     body = response.json()
+#     return body['access_token']
 
-def create_rule():
-    payload = {
-        "add": [
-            {
-                "value": "context:123.1220701888179359745  lang:en -is:retweet", "tag": "covid"
-            }
-        ]
-    }
+# def create_rule():
+#     payload = {
+#         "add": [
+#             {
+#                 "value": "context:123.1220701888179359745  lang:en -is:retweet", "tag": "covid"
+#             }
+#         ]
+#     }
 
-    response = requests.post("GET",rules_url,
-                            headers={"Authorization": "Bearer {}".format(
-                                    get_bearer_token()) }, json=payload)
+#     response = requests.post("GET",rules_url,
+#                             headers={"Authorization": "Bearer {}".format(
+#                                     get_bearer_token()) }, json=payload)
     
 
-    if response.status_code == 201:
-        print("Response: {}".format(response.text))
-    else:
-        print("Cannot create rules. {} : {}".format(response.status_code, response.text))
+#     if response.status_code == 201:
+#         print("Response: {}".format(response.text))
+#     else:
+#         print("Cannot create rules. {} : {}".format(response.status_code, response.text))
 
 
-#print(get_bearer_token())
-create_rule()
+# #print(get_bearer_token())
+# create_rule()
+
+#----------------------------
+gID = ["-419068391"]
+
+rules = [
+        {"value": "from:wojespn -is:retweet -has:links"},
+        {"value": "from:TheSteinLine -is:retweet -has:links"},
+        {"value": "from:ShamsCharania -is:retweet -has:links"},
+        {"value": "from:ChrisBHaynes -is:retweet -has:links"},
+        {"value": "from:KCJHoop -is:retweet"},
+        {"value": "from:affanfarid3 -is:retweet -has:links"}
+    ]
+
+tc = TwitterConnection("config.cfg",bot, gID, rules)
